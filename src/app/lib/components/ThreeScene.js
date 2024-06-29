@@ -4,19 +4,23 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Sphere, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { Html } from '@react-three/drei';
+
+//plane
 const Plane = () => {
   return (
     <group>
+
+    <ambientLight />
       <mesh>
         <boxGeometry args={[10, 0.5, 20]} />
         <meshPhongMaterial 
-          color="blue" 
+          color="red" 
           side={THREE.DoubleSide} 
           transparent={true} 
-          opacity={0.1} 
+          opacity={0.2} 
         />
       </mesh>
-      <lineSegments>a
+      <lineSegments>
         <edgesGeometry attach="geometry" args={[new THREE.BoxGeometry(10, 0.5, 20)]} />
         <lineBasicMaterial attach="material" color="red" />
       </lineSegments>
@@ -24,31 +28,32 @@ const Plane = () => {
   );
 };
 
-
+// paddel
 const Paddle = ({position}) =>{
   return (
       <mesh position={position}>
         <boxGeometry args={[2, 0.2, 0.1]} />
-        <meshPhongMaterial color="blue" />
+        <meshPhongMaterial color="white" />
       </mesh>
     );
 };
-// velocity is the distance done in the delta time v = ∆ Distance / ∆time;
 
+// velocity is the distance done in the delta time v = ∆ Distance / ∆time;
+// ball + victory logic + paddle collision
 const SuperBall = ({ paddlePositions, onScoreUpdate }) => {
   const ballRef = useRef();
   const velocity = useRef(new THREE.Vector3(0, 0, 0));
   const radius = 0.2; // Ball radius
-  const maxX = 5 - radius;
+  const maxX = 5 - radius; // cho3a3 howa radius
   const maxZ = 10 - radius;
-  const winScore = 1;
+  const winScore = 3;
   const [countdown, setCountdown] = useState(2);
   const [gameStarted, setGameStarted] = useState(false);
-  const lastCollisionTime = useRef(0);
+  const lastCollisionTime = useRef(0); //
   const COLLISION_COOLDOWN = 0.1; // seconds
   const [score, setScore] = useState({ player1: 0, player2: 0 });
   const [winner, setWinner] = useState(null);
-
+  const [online, setOnline] = useState({player1:false, player2: false});
   const getRandomStartAngle = () => {
     const randomQuadrant = Math.random() < 0.5 ? 0 : Math.PI;
     return randomQuadrant + Math.PI / 4 + Math.random() * Math.PI / 2;
@@ -77,7 +82,7 @@ const SuperBall = ({ paddlePositions, onScoreUpdate }) => {
 
   useFrame((state, delta) => {
     if (ballRef.current && gameStarted && !winner) {
-      const PADDLE_DEPTH = 0.1;
+      const PADDLE_DEPTH = 0.1; //lghold
       const PADDLE_HALF_WIDTH = 1;
       const ANGLE_SENSITIVITY = 3;
       const MIN_VELOCITY = 8;
@@ -121,7 +126,6 @@ const SuperBall = ({ paddlePositions, onScoreUpdate }) => {
           lastCollisionTime.current = currentTime;
         }
       });
-
       // End zone collisions
       if (Math.abs(newZ) > maxZ) {
         let newScore;
@@ -226,14 +230,10 @@ const SuperBall = ({ paddlePositions, onScoreUpdate }) => {
   );
 }
 
-//movements
 const ThreeScene = () => {
   const [score, setScore] = useState({ player1: 0, player2: 0 });
   const [paddle1Pos, setPaddle1Pos] = useState([0, 0, 9.9]);
   const [paddle2Pos, setPaddle2Pos] = useState([0, 0, -9.9]);
-  const [winner, setWinner] = useState(null);
-
-
   useEffect(() => {
     let paddle1Direction = 0;
     let paddle2Direction = 0;
@@ -294,7 +294,6 @@ const ThreeScene = () => {
   //score and win
   const hanbleScoreUpdate = (newScore) => {
     setScore(newScore);
-    
   };
 
   return (
