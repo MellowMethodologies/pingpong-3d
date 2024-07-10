@@ -5,4 +5,8 @@ html, body {
   background-image: url(../../public/arena3.jpeg) ;
   background-repeat:no-repeat ;
   background-size: 100vw 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
