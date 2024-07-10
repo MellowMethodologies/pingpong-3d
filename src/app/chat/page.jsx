@@ -9,9 +9,9 @@ function page() {
   return (
     <div className={style.body}>
       <div className={style.container}>
+        <List/>
         <Detail/>
         <Chat/>
-        <List/>
       </div>
     </div>
   )
